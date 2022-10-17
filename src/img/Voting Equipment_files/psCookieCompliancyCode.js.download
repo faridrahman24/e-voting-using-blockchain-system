@@ -1,0 +1,48 @@
+﻿function psHideCookieSlide(objContainer) {
+    jQuery(objContainer).animate({
+        height: 0
+    }, 500, function () { jQuery(objContainer).hide(); });
+}
+function psHideCookieFade(objContainer) {
+    jQuery(objContainer).fadeOut("slow");
+}
+function psHideCookieModal() {
+    jQuery.modal.close();
+}
+function psCookieContinue(objContainer, action, persistantCookie) {
+    if (action == "slide") {
+        psHideCookieSlide(objContainer);
+    } else if (action == "fade") {
+        psHideCookieFade(objContainer);
+    } else if (action == "modal") {
+        psHideCookieModal();
+    }else {
+        psHideCookieSlide(objContainer);
+    }
+    if (persistantCookie == "1") {
+        psSetCookie("psConfirmCookies", "1", 90);
+    } else {
+        psSetCookie("psConfirmCookies", "1", null);
+    }
+}
+function psGotoPage(pageURL) {
+    psHideCookieSlide();
+    window.location.href = pageURL;
+}
+function psSetCookie(c_name, value, exdays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+    document.cookie = c_name + "=" + c_value + ";path=/";
+}
+function psGetCookie(c_name) {
+    var i, x, y, ARRcookies = document.cookie.split(";");
+    for (i = 0; i < ARRcookies.length; i++) {
+        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+        x = x.replace(/^\s+|\s+$/g, "");
+        if (x == c_name) {
+            return unescape(y);
+        }
+    }
+}
